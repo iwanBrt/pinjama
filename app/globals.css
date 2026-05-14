@@ -28,20 +28,69 @@ body {
 @media print {
   @page {
     size: 210mm 330mm; /* F4 */
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin: 0 !important;
   }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   body {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
     margin: 0 !important;
     padding: 0 !important;
-    font-size: 11pt !important;
+    background: white !important;
   }
-  /* Sembunyikan panel form, hanya cetak dokumen */
+
+  /* Sembunyikan panel form kiri */
   .print\:hidden {
     display: none !important;
+  }
+
+  /* Area dokumen: full width, tanpa scroll, tanpa shadow */
+  .print\:p-0 {
+    padding: 0 !important;
+  }
+  .print\:m-0 {
+    margin: 0 !important;
+  }
+  .print\:bg-white {
+    background: white !important;
+  }
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  /* Kontainer kanan mengisi seluruh halaman */
+  #print-document {
+    width: 210mm !important;
+    min-height: 330mm !important;
+    padding: 10mm 15mm !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 11pt !important;
+    color: #000 !important;
+  }
+
+  /* Paksa semua border tabel tampil */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+  table td,
+  table th {
+    border: 1px solid #000 !important;
+    padding: 2px 4px !important;
+  }
+  /* Khusus tabel data diri: hilangkan border */
+  table.data-info td {
+    border: none !important;
+    padding: 1px 0 !important;
+  }
+
+  /* Kotak Keterangan */
+  .ket-border {
+    border: 1px solid #000 !important;
   }
 }

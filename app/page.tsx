@@ -24,7 +24,7 @@ export default function Home() {
     kotaSurat: "Bandung",
   });
 
-  const [biayaAdmin] = useState(30000);
+  const [biayaAdmin, setBiayaAdmin] = useState(50000);
   const [sisaDiterima, setSisaDiterima] = useState(0);
   const [cicilanPerBulan, setCicilanPerBulan] = useState(0);
   const [totalCicilan, setTotalCicilan] = useState(0);
@@ -57,7 +57,11 @@ export default function Home() {
     const tenorNum = parseInt(formData.tenor, 10) || 1;
     const bungaBulananNum = parseFloat(formData.bungaBulanan) || 0;
 
-    const sisa = pinjamanBaruNum - pinjamanLamaNum - biayaAdmin;
+    // Biaya admin: ≤ 4.000.000 → 50.000 | > 4.000.000 → 100.000
+    const admin = pinjamanBaruNum <= 4000000 ? 50000 : 100000;
+    setBiayaAdmin(admin);
+
+    const sisa = pinjamanBaruNum - pinjamanLamaNum - admin;
     setSisaDiterima(sisa > 0 ? sisa : 0);
 
     const jasaTotal = pinjamanBaruNum * (bungaBulananNum / 100) * tenorNum;
@@ -67,68 +71,10 @@ export default function Home() {
 
     setCicilanPerBulan(cicilanBulan);
     setTotalCicilan(total);
-  }, [formData, biayaAdmin]);
+  }, [formData]);
 
   const handlePrint = () => {
-    const docEl = document.getElementById("print-document");
-    if (!docEl) { window.print(); return; }
-    const content = docEl.innerHTML;
-    const win = window.open("", "_blank", "width=900,height=1200");
-    if (!win) { window.print(); return; }
-    win.document.write(`<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8"/>
-  <title>Surat Permohonan Pinjaman</title>
-  <style>
-    @page {
-      size: 210mm 330mm;
-      margin: 0 !important;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; padding: 0;
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 11pt;
-      color: #000;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-    .doc {
-      width: 210mm;
-      min-height: 330mm;
-      padding: 12mm 15mm;
-      margin: 0 auto;
-    }
-    table { border-collapse: collapse; width: 100%; }
-    .border-tbl, .border-tbl th, .border-tbl td { border: 1px solid black; }
-    .border-tbl th, .border-tbl td { padding: 1px 4px; text-align: center; }
-    .ket-box { border: 1px solid black; padding: 6px 8px; }
-    .flex-row { display: flex; gap: 16px; align-items: flex-start; }
-    .flex-1 { flex: 1; }
-    p { margin: 0 0 4px 0; text-align: justify; }
-    ol { margin: 0; padding-left: 20px; }
-    li { margin: 0; }
-    .text-center { text-align: center; }
-    .sign-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-    .sign-col { text-align: center; width: 45%; }
-    .sign-space { height: 60px; }
-    .materai { display: inline-block; border: 1px solid #999; font-size: 8pt; color: #666; padding: 4px 6px; margin-top: 4px; }
-    .data-table td { padding: 1px 0; vertical-align: top; }
-    .data-table td:first-child { width: 44mm; }
-    .data-table td:nth-child(2) { width: 6px; }
-    .title { font-size: 14pt; font-weight: bold; text-align: center; text-decoration: underline; text-transform: uppercase; margin-bottom: 10px; }
-    .bold { font-weight: bold; }
-    .italic { font-style: italic; }
-    .underline { text-decoration: underline; }
-  </style>
-</head>
-<body>
-<div class="doc">${content}</div>
-</body>
-</html>`);
-    win.document.close();
-    setTimeout(() => { win.focus(); win.print(); win.close(); }, 500);
+    window.print();
   };
 
 
@@ -364,7 +310,7 @@ export default function Home() {
 
           <p className="mb-2">Yang Bertanda tangan di bawah ini :</p>
           
-          <table className="w-full mb-2">
+          <table className="w-full mb-2 data-info">
             <tbody>
               <tr>
                 <td className="w-44 py-0.5 align-top">Nama</td>
@@ -479,13 +425,13 @@ export default function Home() {
                 <li>KTP/KK</li>
                 <li>SK Jabatan dan SK Terakhir atau surat kontrak</li>
                 <li>ATM dan Buku Tabungan (jika diperlukan).</li>
-                <li>Adm Rp.30.000.</li>
+                <li>Adm Rp.</li>
               </ol>
             </div>
             {/* KANAN: Ket box */}
-            <div className="flex-1 border border-black p-2 bg-gray-50 print:bg-transparent">
+            <div className="flex-1 border border-black ket-border p-2 bg-gray-50 print:bg-transparent">
               <p className="font-bold mb-0.5">Ket :</p>
-              <table className="w-full">
+              <table className="w-full data-info">
                 <tbody>
                   <tr>
                     <td className="py-0">Pinjaman Baru</td>
