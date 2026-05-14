@@ -132,12 +132,42 @@ export default function Home() {
   };
 
 
+  const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
   // Convert month number to Indonesian month string
   const getIndonesianDate = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  };
+
+  // Generate payment schedule rows based on tanggalSurat and tenor
+  // Aturan: pinjaman tgl 1-20 → cicilan mulai bulan yg sama, dibayar tgl 20
+  //         pinjaman tgl 21-31 → cicilan mulai bulan berikutnya, dibayar tgl 20
+  const getPaymentSchedule = () => {
+    const tenorNum = parseInt(formData.tenor, 10) || 1;
+    const rows: { bulan: string; dibayarkan: string }[] = [];
+
+    let baseDate: Date;
+    if (formData.tanggalSurat) {
+      baseDate = new Date(formData.tanggalSurat);
+    } else {
+      baseDate = new Date();
+    }
+
+    const tanggal = baseDate.getDate();
+    // Jika tgl pinjaman 1-20 → cicilan pertama bulan yg sama (offset 0)
+    // Jika tgl pinjaman 21-31 → cicilan pertama bulan berikutnya (offset 1)
+    const monthOffset = tanggal <= 20 ? 0 : 1;
+
+    for (let i = 0; i < tenorNum; i++) {
+      const payDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + monthOffset + i, 20);
+      const bulanLabel = `${months[payDate.getMonth()]} ${payDate.getFullYear()}`;
+      const dibayarkanLabel = `${months[payDate.getMonth()]} ${payDate.getFullYear()}`;
+      rows.push({ bulan: bulanLabel, dibayarkan: dibayarkanLabel });
+    }
+
+    return rows;
   };
 
   return (
@@ -400,11 +430,11 @@ export default function Home() {
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: parseInt(formData.tenor) || 1 }).map((_, i) => (
+              {getPaymentSchedule().map((row, i) => (
                 <tr key={i}>
                   <td className="border border-black py-0.5">{i + 1}</td>
-                  <td className="border border-black py-0.5"></td>
-                  <td className="border border-black py-0.5"></td>
+                  <td className="border border-black py-0.5">{row.bulan}</td>
+                  <td className="border border-black py-0.5">{row.dibayarkan}</td>
                   <td className="border border-black py-0.5 font-medium">{formatRupiah(cicilanPerBulan)}</td>
                 </tr>
               ))}
