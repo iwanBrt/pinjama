@@ -27,13 +27,21 @@ body {
 
 @media print {
   @page {
-    size: A4;
-    margin: 0;
+    size: 210mm 330mm; /* F4 */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
   body {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 11pt !important;
+  }
+  /* Sembunyikan panel form, hanya cetak dokumen */
+  .print\:hidden {
+    display: none !important;
   }
 }

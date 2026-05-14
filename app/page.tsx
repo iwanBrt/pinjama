@@ -70,8 +70,67 @@ export default function Home() {
   }, [formData, biayaAdmin]);
 
   const handlePrint = () => {
-    window.print();
+    const docEl = document.getElementById("print-document");
+    if (!docEl) { window.print(); return; }
+    const content = docEl.innerHTML;
+    const win = window.open("", "_blank", "width=900,height=1200");
+    if (!win) { window.print(); return; }
+    win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Surat Permohonan Pinjaman</title>
+  <style>
+    @page {
+      size: 210mm 330mm;
+      margin: 0 !important;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 11pt;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .doc {
+      width: 210mm;
+      min-height: 330mm;
+      padding: 12mm 15mm;
+      margin: 0 auto;
+    }
+    table { border-collapse: collapse; width: 100%; }
+    .border-tbl, .border-tbl th, .border-tbl td { border: 1px solid black; }
+    .border-tbl th, .border-tbl td { padding: 1px 4px; text-align: center; }
+    .ket-box { border: 1px solid black; padding: 6px 8px; }
+    .flex-row { display: flex; gap: 16px; align-items: flex-start; }
+    .flex-1 { flex: 1; }
+    p { margin: 0 0 4px 0; text-align: justify; }
+    ol { margin: 0; padding-left: 20px; }
+    li { margin: 0; }
+    .text-center { text-align: center; }
+    .sign-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .sign-col { text-align: center; width: 45%; }
+    .sign-space { height: 60px; }
+    .materai { display: inline-block; border: 1px solid #999; font-size: 8pt; color: #666; padding: 4px 6px; margin-top: 4px; }
+    .data-table td { padding: 1px 0; vertical-align: top; }
+    .data-table td:first-child { width: 44mm; }
+    .data-table td:nth-child(2) { width: 6px; }
+    .title { font-size: 14pt; font-weight: bold; text-align: center; text-decoration: underline; text-transform: uppercase; margin-bottom: 10px; }
+    .bold { font-weight: bold; }
+    .italic { font-style: italic; }
+    .underline { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<div class="doc">${content}</div>
+</body>
+</html>`);
+    win.document.close();
+    setTimeout(() => { win.focus(); win.print(); win.close(); }, 500);
   };
+
 
   // Convert month number to Indonesian month string
   const getIndonesianDate = (dateString: string) => {
@@ -266,114 +325,114 @@ export default function Home() {
 
       {/* RIGHT: DOCUMENT PREVIEW (This part is printed) */}
       <div className="flex-1 bg-gray-200 dark:bg-neutral-900 lg:h-screen lg:overflow-y-auto flex justify-center py-8 px-4 lg:p-8 print:p-0 print:m-0 print:bg-white print:h-auto print:overflow-visible relative">
-        {/* A4 Paper Container */}
-        <div className="bg-white text-black w-full max-w-[210mm] min-h-[297mm] shadow-2xl p-[20mm] xl:p-[25.4mm] font-serif print:shadow-none print:w-[210mm] print:h-auto print:p-[20mm] mx-auto text-sm leading-relaxed relative">
+        {/* F4 Paper Container */}
+        <div id="print-document" className="bg-white text-black w-full max-w-[210mm] min-h-[330mm] shadow-2xl px-[15mm] py-[10mm] font-serif print:shadow-none print:w-[210mm] print:min-h-0 print:h-auto print:py-[10mm] print:px-[15mm] mx-auto leading-tight relative" style={{fontSize: '11pt'}}>
           
-          <div className="text-center font-bold text-base mb-8 uppercase underline underline-offset-4">
+          <div className="text-center font-bold uppercase underline underline-offset-4 mb-3" style={{fontSize: '14pt'}}>
             Surat Permohonan dan Pernyataan Pinjaman
           </div>
 
-          <p className="mb-4">Yang Bertanda tangan di bawah ini :</p>
+          <p className="mb-2">Yang Bertanda tangan di bawah ini :</p>
           
-          <table className="w-full mb-6">
+          <table className="w-full mb-2">
             <tbody>
               <tr>
-                <td className="w-48 py-1 align-top">Nama</td>
-                <td className="w-4 py-1 align-top">:</td>
-                <td className="py-1 align-top font-semibold">{formData.nama || <span className="text-gray-300 font-normal">..........................................</span>}</td>
+                <td className="w-44 py-0.5 align-top">Nama</td>
+                <td className="w-4 py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top font-semibold">{formData.nama || <span className="text-gray-300 font-normal">..........................................</span>}</td>
               </tr>
               <tr>
-                <td className="py-1 align-top">No. KTP</td>
-                <td className="py-1 align-top">:</td>
-                <td className="py-1 align-top">{formData.noKtp || <span className="text-gray-300">..........................................</span>}</td>
+                <td className="py-0.5 align-top">No. KTP</td>
+                <td className="py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top">{formData.noKtp || <span className="text-gray-300">..........................................</span>}</td>
               </tr>
               <tr>
-                <td className="py-1 align-top">Tempat Tgl Lahir</td>
-                <td className="py-1 align-top">:</td>
-                <td className="py-1 align-top">
+                <td className="py-0.5 align-top">Tempat Tgl Lahir</td>
+                <td className="py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top">
                   {formData.tempatLahir ? `${formData.tempatLahir}, ` : <span className="text-gray-300">............., </span>} 
                   {formData.tglLahir ? getIndonesianDate(formData.tglLahir) : <span className="text-gray-300">........................</span>}
                 </td>
               </tr>
               <tr>
-                <td className="py-1 align-top">Jabatan</td>
-                <td className="py-1 align-top">:</td>
-                <td className="py-1 align-top">{formData.jabatan || <span className="text-gray-300">..........................................</span>}</td>
+                <td className="py-0.5 align-top">Jabatan</td>
+                <td className="py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top">{formData.jabatan || <span className="text-gray-300">..........................................</span>}</td>
               </tr>
               <tr>
-                <td className="py-1 align-top">Instansi</td>
-                <td className="py-1 align-top">:</td>
-                <td className="py-1 align-top">{formData.instansi || <span className="text-gray-300">..........................................</span>}</td>
+                <td className="py-0.5 align-top">Instansi</td>
+                <td className="py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top">{formData.instansi || <span className="text-gray-300">..........................................</span>}</td>
               </tr>
               <tr>
-                <td className="py-1 align-top">NIP/No Kontrak Kerja</td>
-                <td className="py-1 align-top">:</td>
-                <td className="py-1 align-top">{formData.nip || <span className="text-gray-300">..........................................</span>}</td>
+                <td className="py-0.5 align-top">NIP/No Kontrak Kerja</td>
+                <td className="py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top">{formData.nip || <span className="text-gray-300">..........................................</span>}</td>
               </tr>
               <tr>
-                <td className="py-1 align-top">Alamat</td>
-                <td className="py-1 align-top">:</td>
-                <td className="py-1 align-top">{formData.alamat || <span className="text-gray-300">..........................................</span>}</td>
+                <td className="py-0.5 align-top">Alamat</td>
+                <td className="py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top">{formData.alamat || <span className="text-gray-300">..........................................</span>}</td>
               </tr>
               <tr>
-                <td className="py-1 align-top">NO. Hp.</td>
-                <td className="py-1 align-top">:</td>
-                <td className="py-1 align-top">{formData.noHp || <span className="text-gray-300">..........................................</span>}</td>
+                <td className="py-0.5 align-top">NO. Hp.</td>
+                <td className="py-0.5 align-top">:</td>
+                <td className="py-0.5 align-top">{formData.noHp || <span className="text-gray-300">..........................................</span>}</td>
               </tr>
             </tbody>
           </table>
 
-          <p className="mb-4 text-justify">
+          <p className="mb-2 text-justify">
             Dengan ini menyatakan mengajukan dan telah menerima pinjaman uang sebesar <strong>{formatRupiah(parseNumber(formData.pinjamanBaru))}</strong> dari <strong>{formData.pemberiPinjaman || "............................."}</strong> Selaku pemberi pinjaman yang akan dibayar kembali <em>secara Tunai atau non tunai via transfer/pemindahan</em> melalui pemotongan TKD/TPP/Gaji Bulan/ Honorium Bulanan/ Penghasilan Lainnya*.
           </p>
 
-          <p className="mb-4 text-justify">
+          <p className="mb-2 text-justify">
             Sebanyak <strong>{formData.tenor}</strong> Kali angsuran, dengan total cicilan setelah ditambah jasa menjadi sebesar : <strong>{formatRupiah(totalCicilan)}</strong>
           </p>
 
-          <table className="w-full border-collapse border border-black mb-6 text-center text-sm">
+          <table className="w-full border-collapse border border-black mb-2 text-center" style={{fontSize:'10.5pt'}}>
             <thead>
               <tr className="bg-gray-100 print:bg-transparent">
-                <th className="border border-black py-2 w-12">NO</th>
-                <th className="border border-black py-2">Bulan</th>
-                <th className="border border-black py-2">Dibayarkan</th>
-                <th className="border border-black py-2">Besar Cicilan</th>
+                <th className="border border-black py-0.5 w-10">NO</th>
+                <th className="border border-black py-0.5">Bulan</th>
+                <th className="border border-black py-0.5">Dibayarkan</th>
+                <th className="border border-black py-0.5">Besar Cicilan</th>
               </tr>
             </thead>
             <tbody>
               {Array.from({ length: parseInt(formData.tenor) || 1 }).map((_, i) => (
                 <tr key={i}>
-                  <td className="border border-black py-1.5">{i + 1}</td>
-                  <td className="border border-black py-1.5"></td>
-                  <td className="border border-black py-1.5"></td>
-                  <td className="border border-black py-1.5 font-medium">{formatRupiah(cicilanPerBulan)}</td>
+                  <td className="border border-black py-0.5">{i + 1}</td>
+                  <td className="border border-black py-0.5"></td>
+                  <td className="border border-black py-0.5"></td>
+                  <td className="border border-black py-0.5 font-medium">{formatRupiah(cicilanPerBulan)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          <p className="mb-4 text-justify">
+          <p className="mb-2 text-justify">
             Saya Juga memberi kuasa penuh untuk memotong langsung TKD/TPP/GAJI/ Honorarium saya yang dimaksud kepada bendahara Gaji Kantor <strong>{formData.bendaharaGaji || "..................................................."}</strong> Tempat saya bekerja secara <em>tunai atau non tunai via transfer/Pemindahbukuan</em> untuk diserahkan kepada pemberi pinjaman. Apabila saya pindah, berhenti bekerja atau diberhentikan dari kantor tempat saya bekerja saat saya meminjam. maka saya akan tetap membayar pinjaman tersebut.
           </p>
 
-          <p className="mb-4 text-justify">
+          <p className="mb-2 text-justify">
             Apabila pemotongan TKD/Gaji/Honorarium saya secara <em>tunai atau non tunai via transfer/pemindahbukuan tidak memungkinkan. Maka saya bersedia menyerahkan ATM saya kepada pemberi pinjaman untuk pengembalian uang dari rekening tabungan saya untuk angsuran sebesar utang saya dimaksud diatas.</em>
           </p>
 
-          <p className="mb-8">Untuk keperluan ini saya serahkan persyaratan dan agunan**.</p>
+          <p className="mb-3">Untuk keperluan ini saya serahkan persyaratan dan agunan**.</p>
 
-          <div className="flex justify-between items-start mb-12">
-            <div className="text-center w-64">
+          <div className="flex justify-between items-start mb-3">
+            <div className="text-center w-56">
               <p>Mengetahui/Menyetujui</p>
               <p>Bendahara Gaji</p>
-              <div className="h-24"></div>
+              <div className="h-16"></div>
               <p>(............................................)</p>
             </div>
-            <div className="text-center w-64">
+            <div className="text-center w-56">
               <p>{formData.kotaSurat || "Bandung"}, {getIndonesianDate(formData.tanggalSurat) || "................"}</p>
               <p>Yang Mengajukan/Pemohon</p>
-              <div className="h-24 flex items-end justify-center relative">
-                <div className="absolute text-[10px] text-gray-400 border border-gray-300 p-2 bottom-4 left-1/2 -translate-x-1/2">
+              <div className="h-16 flex items-end justify-center relative">
+                <div className="absolute text-[9px] text-gray-400 border border-gray-300 p-1.5 bottom-2 left-1/2 -translate-x-1/2">
                   Materai<br/>10.000
                 </div>
               </div>
@@ -381,37 +440,41 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border border-black p-4 inline-block w-full text-sm mb-6 bg-gray-50 print:bg-transparent">
-            <p className="font-bold mb-2">Ket :</p>
-            <table className="w-full">
-              <tbody>
-                <tr>
-                  <td className="w-64 py-0.5">Pinjaman Baru</td>
-                  <td className="w-4 py-0.5">:</td>
-                  <td className="py-0.5">{formatRupiah(parseNumber(formData.pinjamanBaru))}</td>
-                </tr>
-                <tr>
-                  <td className="py-0.5">Pinjaman yang belum Lunas</td>
-                  <td className="py-0.5">:</td>
-                  <td className="py-0.5">{formatRupiah(parseNumber(formData.pinjamanLama))}</td>
-                </tr>
-                <tr className="font-bold border-t border-dashed border-gray-400">
-                  <td className="py-2 mt-1">Sisa Diterima</td>
-                  <td className="py-2 mt-1">:</td>
-                  <td className="py-2 mt-1 text-base">{formatRupiah(sisaDiterima)}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="text-xs">
-            <p className="font-bold mb-1">Catatan : Melampirkan foto Copy</p>
-            <ol className="list-decimal pl-5 space-y-1">
-              <li>KTP/KK</li>
-              <li>SK Jabatan dan SK Terakhir atau surat kontrak</li>
-              <li>ATM dan Buku Tabungan (jika diperlukan).</li>
-              <li>Adm Rp.30.000.</li>
-            </ol>
+          {/* Ket dan Catatan sejajar sesuai template */}
+          <div className="flex gap-4 items-start" style={{fontSize:'10.5pt'}}>
+            {/* KIRI: Catatan */}
+            <div className="flex-1">
+              <p className="font-bold mb-0.5">Catatan : Melampirkan foto Copy</p>
+              <ol className="list-decimal pl-5 space-y-0">
+                <li>KTP/KK</li>
+                <li>SK Jabatan dan SK Terakhir atau surat kontrak</li>
+                <li>ATM dan Buku Tabungan (jika diperlukan).</li>
+                <li>Adm Rp.30.000.</li>
+              </ol>
+            </div>
+            {/* KANAN: Ket box */}
+            <div className="flex-1 border border-black p-2 bg-gray-50 print:bg-transparent">
+              <p className="font-bold mb-0.5">Ket :</p>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-0">Pinjaman Baru</td>
+                    <td className="w-4 py-0">:</td>
+                    <td className="py-0">{formatRupiah(parseNumber(formData.pinjamanBaru))}</td>
+                  </tr>
+                  <tr>
+                    <td className="py-0">Pinjaman yang belum Lunas</td>
+                    <td className="py-0">:</td>
+                    <td className="py-0">{formatRupiah(parseNumber(formData.pinjamanLama))}</td>
+                  </tr>
+                  <tr className="font-bold border-t border-dashed border-gray-400">
+                    <td className="py-0.5">Sisa Diterima</td>
+                    <td className="py-0.5">:</td>
+                    <td className="py-0.5">{formatRupiah(sisaDiterima)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
         </div>
