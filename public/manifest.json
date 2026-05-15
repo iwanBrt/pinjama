@@ -1,0 +1,17 @@
+{
+  "name": "Pinjaman App",
+  "short_name": "Pinjaman",
+  "description": "Generator Surat Permohonan Pinjaman",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/app_icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
