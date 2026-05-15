@@ -363,7 +363,7 @@ export default function Home() {
           </p>
 
           <p className="mb-2 text-justify">
-            Sebanyak <strong>{formData.tenor}</strong> Kali angsuran, dengan total cicilan setelah ditambah jasa menjadi sebesar : <strong>{formatRupiah(totalCicilan)}</strong>
+            Sebanyak <strong>{formData.tenor}</strong> Kali angsuran, dengan total cicilan setelah ditambah jasa menjadi sebesar : <strong></strong>
           </p>
 
           <table className="w-full border-collapse border border-black mb-2 text-center" style={{fontSize:'10.5pt'}}>
