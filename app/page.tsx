@@ -129,13 +129,6 @@ export default function Home() {
             </h1>
             <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">Generator Surat Otomatis</p>
           </div>
-          <button 
-            onClick={handlePrint}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-all shadow-md shadow-blue-500/20 active:scale-95"
-          >
-            <Printer size={16} />
-            <span className="hidden sm:inline">Cetak</span>
-          </button>
         </div>
 
         <div className="p-6 space-y-8">
@@ -278,6 +271,14 @@ export default function Home() {
                 <span className="font-bold text-lg text-blue-400">{formatRupiah(sisaDiterima)}</span>
               </div>
             </div>
+
+            <button
+              onClick={handlePrint}
+              className="mt-3 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-full text-sm font-medium transition-all shadow-md shadow-blue-500/20 active:scale-95 w-full"
+            >
+              <Printer size={16} />
+              <span>Cetak</span>
+            </button>
           </section>
 
           {/* SECTION: Footer Surat */}
